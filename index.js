@@ -5,22 +5,40 @@ const fetchData = async function(searchTerm) {
             s: searchTerm
         }
     });
+
+    if (response.data.Error) {
+        return [];
+    }
+
     return response.data.Search;
-}
+};
 
-const searchInput = document.querySelector('input')
-
-
+const autoCompleteRoot = document.querySelector('.autocomplete')
+autoCompleteRoot.innerHTML = `
+    <label><b>Search for a movie</b></label>
+    <input class="input"/>
+    <div class="dropdown dp">
+        <div class="dropdown-menu">
+            <div class="dropdown-content results"></div>
+        </div>
+    </div>
+    <div id="target"></div>
+`;
+const searchInput = document.querySelector('.input');
+const dropdown = document.querySelector('.dropdown');
+const resultsWrapper = document.querySelector('.results');
 const onInput = async (event) => {
    const movies =  await fetchData(event.target.value)
+   dropdown.classList.add('is-active');
    for(let movie of movies) {
-        const div = document.createElement('div');
-        div.innerHTML = `
+        const option = document.createElement('a');
+        option.classList.add('dropdown-item');
+        option.innerHTML = `
         <img src="${movie.Poster}"/>
-        <h2>${movie.Title}</h2>
+        ${movie.Title}
         `
-        document.querySelector('#target').appendChild(div)
+        resultsWrapper.appendChild(option)
    }
-}
+};
 
-searchInput.addEventListener('input', debounce(onInput,750))
+searchInput.addEventListener('input', debounce(onInput,750));
