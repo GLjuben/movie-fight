@@ -46,3 +46,8 @@ const onInput = async (event) => {
 };
 
 searchInput.addEventListener('input', debounce(onInput,750));
+document.addEventListener('click', (event) => {
+    if (!autoCompleteRoot.contains(event.target)) {
+        dropdown.classList.remove('is-active');
+    }
+})
